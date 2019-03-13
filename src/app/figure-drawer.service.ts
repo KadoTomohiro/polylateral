@@ -83,7 +83,7 @@ export class FigureDrawerService {
 
     const lines: Line[] = this.pointSelector[option.connectType.toString()](vertexes, midpoints, option.distance);
 
-    this.drawCircle(ctx, center, this.getRadius(canvasSize));
+    // this.drawCircle(ctx, center, this.getRadius(canvasSize));
     // this.drawPath(ctx, vertexes);
     // this.drawPath(ctx, midpoints);
     this.drawLines(ctx, lines);
@@ -95,7 +95,7 @@ export class FigureDrawerService {
   private drawPath(ctx: CanvasRenderingContext2D, points: Point[]) {
     ctx.beginPath();
     // ctx.moveTo(originPoint.x, originPoint.y);
-    ctx.strokeStyle = '#38F';
+    ctx.strokeStyle = '#eee';
     points.forEach(vertex => {
       ctx.lineTo(vertex.x, vertex.y);
     });

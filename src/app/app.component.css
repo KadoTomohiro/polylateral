@@ -6,3 +6,8 @@ div {
 p {
   display: inline-block;
 }
+
+input {
+  width: 3em;
+  text-align: right;
+}

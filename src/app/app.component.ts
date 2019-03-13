@@ -8,14 +8,13 @@ import { toArray } from 'rxjs/operators';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'polylateral';
+
+  size = 100;
+  vertexNumber = 8;
 
   vertexes: Observable<number[]>;
   constructor() {
-    this.vertexes = range(3, 18)
-      .pipe(
-        toArray()
-      );
+    this.setVertexes();
   }
 
   distances(vertex: number, type: string) {
@@ -25,5 +24,12 @@ export class AppComponent {
       distances.push(i);
     }
     return distances;
+  }
+
+  private setVertexes() {
+    this.vertexes = range(3, this.vertexNumber - 3 + 1)
+      .pipe(
+        toArray()
+      );
   }
 }

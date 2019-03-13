@@ -1,10 +1,14 @@
+<input type="number" min="3" [(ngModel)]="vertexNumber" (change)="setVertexes()">角形まで
+<!--<input type="number" [(ngModel)]="size">px-->
+
+<hr>
 
 <div *ngFor="let i of vertexes | async">
   <h3>n = {{i}}</h3>
 
   <ng-container *ngFor="let type of ['vertex', 'midpoint', 'vertexMidpoint']">
     <p *ngFor="let distance of distances(i, type)">
-      <ply-canvas [size]="100" [vertexNumber]="i" [distance]="distance" [connectType]="type"></ply-canvas>
+      <ply-canvas [size]="size" [vertexNumber]="i" [distance]="distance" [connectType]="type"></ply-canvas>
     </p>
     <br>
   </ng-container>

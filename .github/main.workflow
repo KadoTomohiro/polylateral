@@ -2,7 +2,7 @@ workflow "New workflow" {
   on = "push"
   resolves = [
     "Lint",
-    "Build",
+    "DeployGhPages",
   ]
 }
 
@@ -27,4 +27,13 @@ action "Build" {
   uses = "actions/npm@master"
   needs = ["Test"]
   args = "run build --prod  --base-href polylateral"
+}
+
+action "DeployGhPages" {
+  uses = "maxheld83/ghpages@v0.2.1"
+  needs = ["Build"]
+  env = {
+    BUILD_DIR = "dist/polylateral/"
+  }
+  secrets = ["GITHUB_TOKEN", "GH_PAT"]
 }

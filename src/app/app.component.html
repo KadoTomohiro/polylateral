@@ -1,8 +1,11 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div>
-  <h1>
-    {{ title }}
-  </h1>
-</div>
 
-<ply-canvas [size]="100"></ply-canvas>
+<div *ngFor="let i of vertexes | async">
+  <h3>n = {{i}}</h3>
+
+  <ng-container *ngFor="let type of ['vertex', 'midpoint', 'vertexMidpoint']">
+    <p *ngFor="let distance of distances(i, type)">
+      <ply-canvas [size]="100" [vertexNumber]="i" [distance]="distance" [connectType]="type"></ply-canvas>
+    </p>
+    <br>
+  </ng-container>
+</div>

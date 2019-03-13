@@ -17,15 +17,9 @@ action "Lint" {
   args = "run lint"
 }
 
-action "Test" {
-  uses = "actions/npm@master"
-  needs = ["Lint"]
-  args = "run test"
-}
-
 action "Build" {
   uses = "actions/npm@master"
-  needs = ["Test"]
+  needs = ["Lint"]
   args = "run build --prod  --base-href polylateral"
 }
 

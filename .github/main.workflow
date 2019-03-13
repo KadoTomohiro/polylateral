@@ -20,7 +20,7 @@ action "Lint" {
 action "Build" {
   uses = "actions/npm@master"
   needs = ["Lint"]
-  args = "run build --prod  --base-href polylateral"
+  args = "run build:prod -- --base-href polylateral"
 }
 
 action "DeployGhPages" {

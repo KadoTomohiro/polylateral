@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Polygram } from './models/polygram';
 
 export type ConnectType = 'vertex' | 'midpoint' | 'vertexMidpoint';
 type PointSelector = (vertexes: Point[], midpoints: Point[], distance: number) => Line[];
@@ -76,9 +77,12 @@ export class FigureDrawerService {
 
     const canvasSize: Size = this.getCanvasSize(ctx);
     const center: Point = this.getCanvasCenter(canvasSize);
-    const originPoint: Point = this.reverse(this.getFigureOrigin(canvasSize, center), canvasSize);
+    const radius = this.getRadius(canvasSize);
+    // const originPoint: Point = this.reverse(this.getFigureOrigin(canvasSize, center), canvasSize);
 
-    const vertexes: Point[] = this.getVertexes(option.vertexNumber, originPoint, center);
+    const polygram = new Polygram(option.vertexNumber, center, radius);
+
+    const vertexes: Point[] = polygram.vertexes;
     const midpoints = this.getMidPoints(vertexes);
 
     const lines: Line[] = this.pointSelector[option.connectType.toString()](vertexes, midpoints, option.distance);
@@ -94,7 +98,6 @@ export class FigureDrawerService {
 
   private drawPath(ctx: CanvasRenderingContext2D, points: Point[]) {
     ctx.beginPath();
-    // ctx.moveTo(originPoint.x, originPoint.y);
     ctx.strokeStyle = '#eee';
     points.forEach(vertex => {
       ctx.lineTo(vertex.x, vertex.y);
@@ -112,12 +115,18 @@ export class FigureDrawerService {
 
 
   private drawLines(ctx: CanvasRenderingContext2D, lines: Line[]) {
+    const canvasSize: Size = this.getCanvasSize(ctx);
+
     ctx.strokeStyle = '#000';
 
     lines.forEach(line => {
+      const reversed = {
+        start: this.reverse(line.start, canvasSize),
+        end: this.reverse(line.end, canvasSize),
+      };
       ctx.beginPath();
-      ctx.moveTo(line.start.x, line.start.y);
-      ctx.lineTo(line.end.x, line.end.y);
+      ctx.moveTo(reversed.start.x, reversed.start.y);
+      ctx.lineTo(reversed.end.x, reversed.end.y);
       ctx.stroke();
     });
   }
@@ -137,21 +146,6 @@ export class FigureDrawerService {
 
   private getNextPointIndex(i: number, length: number, distance = 1) {
     return (i + distance) % length;
-  }
-
-  private getVertexes(vertexNumber: number, originPoint: Point, center: Point) {
-    const vertexes: Point[] = [];
-
-    const fullAngule = Math.PI * 2;
-    for (let i = 0; i < vertexNumber; i++) {
-      vertexes.push(this.rotation(originPoint, fullAngule / vertexNumber * i, center));
-    }
-    return vertexes;
-  }
-
-  private getFigureOrigin(canvasSize: Size, center: Point): Point {
-    const radius = this.getRadius(canvasSize);
-    return this.translationalMotion(center, {x: 0, y: -radius});
   }
 
   private getCanvasSize(ctx: CanvasRenderingContext2D) {
@@ -174,28 +168,10 @@ export class FigureDrawerService {
     };
   }
 
-  private translationalMotion(originalPoint: Point, movement: Point): Point {
-    return {
-      x: originalPoint.x + movement.x,
-      y: originalPoint.y + movement.y
-    };
-  }
-
   private getMidPoint(line: Line): Point {
     return {
       x: (line.start.x + line.end.x) / 2,
       y: (line.start.y + line.end.y) / 2,
-    };
-  }
-
-  private rotation(originalPoint: Point, angle: number, center: Point = {x: 0, y: 0}): Point {
-
-    const radiusX = originalPoint.x - center.x;
-    const radiusY = originalPoint.y - center.y;
-
-    return {
-      x: radiusX * Math.cos(angle) - radiusY * Math.sin(angle) + center.x,
-      y: radiusX * Math.sin(angle) - radiusY * Math.cos(angle) + center.y,
     };
   }
 

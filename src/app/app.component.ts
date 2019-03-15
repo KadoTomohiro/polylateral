@@ -26,7 +26,7 @@ export class AppComponent {
     return distances;
   }
 
-  private setVertexes() {
+  setVertexes() {
     this.vertexes = range(3, this.vertexNumber - 3 + 1)
       .pipe(
         toArray()
